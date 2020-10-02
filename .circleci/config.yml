@@ -234,6 +234,7 @@ jobs:
           command: |
             apk add --update ansible
             apk add --update bash
+            apk add openssh-client
 
       - run:
           name: Make inventory for Ansible

@@ -1,7 +1,7 @@
 ---
 - name: "Udapeople"
   hosts: all
-  user: ubuntu
+  user: udacity-project-three-user
 
   vars:
     - ansible_host_key_checking: false
