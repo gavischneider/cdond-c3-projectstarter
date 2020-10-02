@@ -1,0 +1,32 @@
+- name: "Install Node.js"
+  shell: |
+    curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+    sudo apt -y upgrade
+    sudo apt install -y nodejs
+- name: "Install PM2"
+  become: true
+  npm:
+    name: pm2
+    global: yes
+    production: yes
+    state: present
+
+- name: Makedir
+  file:
+    path: /home/ubuntu/backend
+    state: directory
+
+- name: "Copy build"
+  unarchive:
+    src: /tmp/saveme/backend.tar.gz
+    dest: /home/ubuntu/backend/
+
+- name: "Copy package.json"
+  copy:
+    src: /tmp/saveme/package.json
+    dest: /home/ubuntu/backend/
+
+- name: "NPM Install"
+  shell: |
+    cd /home/ubuntu/backend    
+    npm install

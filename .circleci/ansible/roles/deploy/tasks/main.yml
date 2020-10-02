@@ -1,0 +1,24 @@
+# - name: "Makedir"
+#   file:
+#     path: /home/ubuntu/backend
+#     state: directory
+# - name: "move backend files to server."
+#   copy:
+#     src: /root/project/backend
+#     dest: /home/ubuntu
+#
+# - name: "NPM Install"
+#   shell: |
+#     cd /home/ubuntu/backend
+#     npm install
+
+- name: "Build"
+  shell: |
+    cd /home/ubuntu/backend
+    npm run build
+
+- name: "Run it"
+  become: true
+  shell: |
+    cd /home/ubuntu/backend 
+    pm2 start npm -- run "start:dev"
