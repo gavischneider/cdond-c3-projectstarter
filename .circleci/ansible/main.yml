@@ -2,6 +2,7 @@
 - name: Udapeople
   hosts: all
   user: ubuntu
+  become: true
 
   pre_tasks:
     - name: "wait for target to be reachable"
@@ -15,16 +16,16 @@
     #=no"
     - environment_config:
       # Get the environment variables from CircleCI and add to the instance
+      ENVIRONMENT: production
+      TYPEORM_CONNECTION: postgres
       CIRCLE_WORKFLOW_ID: "{{ lookup('env','CIRCLE_WORKFLOW_ID') }}"
       TYPEORM_MIGRATIONS: "{{ lookup('env','TYPEORM_MIGRATIONS') }}"
       TYPEORM_ENTITIES: "{{ lookup('env','TYPEORM_ENTITIES') }}"
-      TYPEORM_CONNECTION: "{{ lookup('env','TYPEORM_CONNECTION') }}"
       TYPEORM_HOST: "{{ lookup('env','TYPEORM_HOST') }}"
       TYPEORM_PORT: "{{ lookup('env','TYPEORM_PORT') }}"
       TYPEORM_USERNAME: "{{ lookup('env','TYPEORM_USERNAME') }}"
       TYPEORM_PASSWORD: "{{ lookup('env','TYPEORM_PASSWORD') }}"
       TYPEORM_DATABASE: "{{ lookup('env','TYPEORM_DATABASE') }}"
-      ENVIRONMENT: "{{ lookup('env','ENVIRONMENT') }}"
       NODE_ENV: production
     #API_URL: "{{ lookup('env','API_URL') }}"
 
