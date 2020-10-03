@@ -13,7 +13,7 @@
     - ansible_python_interpreter: /usr/bin/python3
 #    - ansible_ssh_common_args: "-o StrictHostKeyChecking
 #=no"
-    environment_config:
+    - environment_config:
       # Get the environment variables from CircleCI and add to the instance
       CIRCLE_WORKFLOW_ID: "{{ lookup('env','CIRCLE_WORKFLOW_ID') }}"
       TYPEORM_MIGRATIONS: "{{ lookup('env','TYPEORM_MIGRATIONS') }}"
