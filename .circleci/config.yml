@@ -235,6 +235,7 @@ jobs:
             apk add --update ansible
             apk add --update bash
             apk add openssh-client
+            echo -e "[defaults]\nhost_key_checking = False"  >> ansible.cfg
 
       - run:
           name: Make inventory for Ansible
