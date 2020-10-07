@@ -362,60 +362,38 @@ jobs:
       - revert-migrations
       - slack/status
 
-  get-last-deployment-id:
+  deploy-cloudfront-infrastructure:
     docker:
-      - image: alpine:latest
+      - image: amazon/aws-cli
     steps:
       - checkout
-      - run: apk add aws-cli
-      - run: apk add tar
       - run:
-          name: Query and save last deployment id
+          name: Deploy the backend infrastructure using cloudformation
           command: |
-            mkdir /tmp/saveme
-            ID=$(aws cloudformation \
-                list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-                --no-paginate --output text)
-            echo ${ID} > /tmp/saveme/last_deployment_id.txt
-      - persist_to_workspace:
-          root: /tmp/saveme
-          paths:
-            - last_deployment_id.txt
+            OLD_WORKFLOW_ID=$(aws cloudformation \
+              list-exports --query "Exports[?Name==\`UdapeopleWorkflowID\`].Value" \
+              --no-paginate --output text)
+              
+            echo "OLD_WORKFLOW_ID: $OLD_WORKFLOW_ID."
 
-  cloudfront-update:
-    executor: aws-cli/default
-    steps:
-      - aws-cli/setup:
-          profile-name: default
-      - checkout
-      - run:
-          name: Promote to production
-          command: |
+            export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
+              --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
+
+            printf '%s\n' "${STACKS[@]}"
+
             aws cloudformation deploy \
-              --template-file .circleci/files/cloudfront.yml \
-              --stack-name udapeople-cloudfront \
-              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
-          no_output_timeout: 20m
+              --template-file .circleci/cloudformation/cloudfront_infrastructure.yml \
+              --parameter-overrides ID="prod-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --stack-name udapeople-prod-cloudfront
+
+            if printf '%s\n' "${STACKS[@]}" | grep -q "$OLD_WORKFLOW_ID"; then
+              echo "Removing previous stack"
+              aws s3 rm "s3://udapeople-${OLD_WORKFLOW_ID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OLD_WORKFLOW_ID}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OLD_WORKFLOW_ID}"
+            fi
       - destroy-environment
       - revert-migrations
-
-  cleanup-old-resources:
-    docker:
-      - image: alpine:latest
-    steps:
-      - checkout
-      - run: apk add aws-cli
-      - run: apk add tar
-      - attach_workspace:
-          at: /tmp/saveme
-      - run:
-          name: Delete old resources
-          command: |
-            OldPipelineID=$(cat /tmp/saveme/last_deployment_id.txt)
-            echo Old pipeline ID: ${OldPipelineID}
-            aws s3 rm s3://udapeople-frontend-deployment-${OldPipelineID} --recursive
-            aws cloudformation delete-stack --stack-name backend-${OldPipelineID}
-            aws cloudformation delete-stack --stack-name frontend-${OldPipelineID}
 
 workflows:
   UdaPeople:
@@ -457,13 +435,6 @@ workflows:
       - smoke-tests:
           requires:
             - deploy-frontend
-      - get-last-deployment-id:
+      - deploy-cloudfront-infrastructure:
           requires:
             - smoke-tests
-      - cloudfront-update:
-          requires:
-            - smoke-tests
-      - cleanup-old-resources:
-          requires:
-            - get-last-deployment-id
-            - cloudfront-update
