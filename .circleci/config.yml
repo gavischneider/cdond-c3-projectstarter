@@ -356,7 +356,7 @@ jobs:
             --output text)
             curl "http://${BACKEND_IP}:3030/api/status"
       - destroy-environment
-      - revert-migration
+      - revert-migrations
       - slack/status
 
 #  cloudfront-update:
