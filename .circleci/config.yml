@@ -255,7 +255,22 @@ jobs:
           paths:
             - backend_url.txt
 
-#  run-migrations:
+  run-migrations:
+    docker:
+      - image: circleci/node
+    steps:
+      - checkout
+      - npm-install:
+          end: "backend"
+      - run:
+          name: Run DB Migration
+          command: |
+            cd backend && npm install
+            npm run migrations
+      - run:
+          name: Log to memstash
+          command: |
+            curl -H "Content-Type: text/plain" -H "token: 46379a95-9d53-46f2-becb-d0e5c670441f" --request PUT --data "true" https://api.memstash.io/values/${CIRCLE_WORKFLOW_ID:0:7}
 
 #  deploy-frontend:
 
@@ -293,3 +308,6 @@ workflows:
             branches:
               only:
                 - master
+      - run-migrations:
+          requires:
+            - configure-infrastructure
