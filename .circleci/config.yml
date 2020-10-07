@@ -225,10 +225,10 @@ jobs:
       - image: alpine:latest
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints: ["de:63:d5:ba:a2:0f:d6:e3:87:04:d1:46:d0:0b:43:5f"]
       - attach_workspace:
           at: /tmp/saveme
+      - add_ssh_keys:
+          fingerprints: ["de:63:d5:ba:a2:0f:d6:e3:87:04:d1:46:d0:0b:43:5f"]
       - run:
           name: Install Ansible
           command: |

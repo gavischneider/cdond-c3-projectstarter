@@ -28,6 +28,3 @@
     - configure-prometheus-node-exporter
     - configure-server
     - deploy
-  #  - name: "wait for target to be reachable"
-  #   wait_for_connection:
-  #     timeout: 100
