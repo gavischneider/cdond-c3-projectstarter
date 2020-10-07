@@ -1,6 +1,6 @@
 ---
 - user: ubuntu
-  hosts: all
+  hosts: backend
   gather_facts: true
 
   vars:
