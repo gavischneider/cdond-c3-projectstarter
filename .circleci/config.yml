@@ -394,7 +394,6 @@ jobs:
             fi
       - destroy-environment
       - revert-migrations
-# --
 
 workflows:
   UdaPeople:
