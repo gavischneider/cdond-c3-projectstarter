@@ -355,7 +355,7 @@ jobs:
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text)
             curl "http://${BACKEND_IP}:3030/api/status"
-      - destroy-enviroment
+      - destroy-environment
       - revert-migration
       - slack/status
 
