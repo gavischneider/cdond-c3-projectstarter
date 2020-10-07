@@ -1,5 +1,6 @@
 ---
 - user: ubuntu
+  hosts: all
   gather_facts: true
 
   vars:
