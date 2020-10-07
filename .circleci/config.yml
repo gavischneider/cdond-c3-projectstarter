@@ -343,7 +343,7 @@ jobs:
       - run:
           name: Smoke test on frontend
           command: |
-            URL="http://udapeople-frontend-deployment-${CIRCLE_WORKFLOW_ID:0:7}.s3-website.us-east-1.amazonaws.com/#/employees"
+            URL="http://udapeople-frontend-deployment-${CIRCLE_WORKFLOW_ID:0:7}.s3-website.us-west-2.amazonaws.com/#/employees"
             if curl -s ${URL} | grep "Welcome"
             then
               return 0
@@ -358,9 +358,9 @@ jobs:
       #         --query "Reservations[*].Instances[*].[PublicDnsName]" \
       #         --output text)
       #       curl "http://${BACKEND_URL}:3030/api/status"
-      # - destroy-environment
-      # - revert-migrations
-      # - slack/status
+      - destroy-environment
+      - revert-migrations
+      - slack/status
 
   get-last-deployment-id:
     docker:
