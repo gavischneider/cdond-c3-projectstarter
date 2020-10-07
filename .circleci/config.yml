@@ -272,7 +272,54 @@ jobs:
           command: |
             curl -H "Content-Type: text/plain" -H "token: 46379a95-9d53-46f2-becb-d0e5c670441f" --request PUT --data "true" https://api.memstash.io/values/${CIRCLE_WORKFLOW_ID:0:7}
 
-#  deploy-frontend:
+  prepare-frontend-for-deployment:
+    docker:
+      - image: circleci/node
+    steps:
+      - attach_workspace:
+          at: /tmp/saveme
+      - checkout
+      - npm-install:
+          end: "frontend"
+      - run:
+          name: Build frontend
+          command: |
+            BACKEND_URL=$(cat /tmp/saveme/backend_url.txt)
+            echo BACKEND_URL: ${BACKEND_URL}
+            export API_URL=http://${BACKEND_URL}:3030
+            cd frontend            
+            npm run build
+      - run:
+          name: Compress build files
+          command: |
+            cd frontend/dist
+            tar -zcvf /tmp/saveme/frontend.tar.gz ./
+      - persist_to_workspace:
+          root: /tmp/saveme
+          paths:
+            - frontend.tar.gz
+
+  deploy-frontend:
+    executor: aws-cli/default
+    steps:
+      - aws-cli/setup:
+          profile-name: default
+      - attach_workspace:
+          at: /tmp/saveme
+      - run:
+          name: Extract frontend build
+          command: |
+            echo `ls /tmp/saveme`
+            mkdir ~/frontend
+            cp /tmp/saveme/frontend.tar.gz ~/frontend
+            cd ~/frontend
+            tar -zxvf frontend.tar.gz
+            echo `ls -la`
+      - run:
+          name: deploy to s3 bucket
+          command: |
+            cd ~/frontend
+            aws s3 sync . s3://udapeople-frontend-deployment-${CIRCLE_WORKFLOW_ID:0:7}
 
 #  deploy-backend:
 
@@ -311,3 +358,9 @@ workflows:
       - run-migrations:
           requires:
             - configure-infrastructure
+      - prepare-frontend-for-deployment:
+          requires:
+            - run-migrations
+      - deploy-frontend:
+          requires:
+            - prepare-frontend-for-deployment
