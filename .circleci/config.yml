@@ -287,6 +287,7 @@ jobs:
             BACKEND_URL=$(cat /tmp/saveme/backend_url.txt)
             echo BACKEND_URL: ${BACKEND_URL}
             export API_URL=http://${BACKEND_URL}:3030
+            echo "BACKEND_URL=$BACKEND_URL" >> frontend/.env
             sudo npm install webpack-dev-server -g
             cd frontend            
             npm i
@@ -352,11 +353,11 @@ jobs:
       - run:
           name: Smoke test on backend
           command: |
-            BACKEND_IP=$(aws ec2 describe-instances \
-            --filters "Name=tag:Name,Values=backend-deployment-${CIRCLE_WORKFLOW_ID:0:7}" \
+            BACKEND_URL=$(aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text)
-            curl "http://${BACKEND_IP}:3030/api/status"
+            curl "http://${BACKEND_URL}:3030/api/status"
       - destroy-environment
       - revert-migrations
       - slack/status
