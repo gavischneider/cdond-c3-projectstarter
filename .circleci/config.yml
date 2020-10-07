@@ -321,9 +321,43 @@ jobs:
             cd ~/frontend
             aws s3 sync . s3://udapeople-frontend-deployment-${CIRCLE_WORKFLOW_ID:0:7}
 
-#  deploy-backend:
-
-#  smoke-test:
+  smoke-tests:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - attach_workspace:
+          at: /tmp/saveme
+      - checkout
+      - run:
+          name: Install system dependencies
+          command: |
+            apk add --no-cache curl
+            apk add --no-cache --upgrade bash
+            apk add --no-cache --update ansible
+            apk add --no-cache openssh-client
+            apk add --update nodejs npm
+            pip3 install awscli
+      - run:
+          name: Smoke test on frontend
+          command: |
+            URL="http://udapeople-frontend-deployment-${CIRCLE_WORKFLOW_ID:0:7}.s3-website.eu-central-1.amazonaws.com/#/employees"
+            if curl -s ${URL} | grep "Welcome"
+            then
+              return 0
+            else
+              return 1
+            fi
+      - run:
+          name: Smoke test on backend
+          command: |
+            BACKEND_IP=$(aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --output text)
+            curl "http://${BACKEND_IP}:3030/api/status"
+      - destroy-enviroment
+      - revert-migration
+      - slack/status
 
 #  cloudfront-update:
 
@@ -364,3 +398,6 @@ workflows:
       - deploy-frontend:
           requires:
             - prepare-frontend-for-deployment
+      - smoke-tests:
+          requires:
+            - deploy-frontend
