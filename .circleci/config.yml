@@ -287,7 +287,9 @@ jobs:
             BACKEND_URL=$(cat /tmp/saveme/backend_url.txt)
             echo BACKEND_URL: ${BACKEND_URL}
             export API_URL=http://${BACKEND_URL}:3030
+            sudo npm install webpack-dev-server -g
             cd frontend            
+            npm i
             npm run build
       - run:
           name: Compress build files
@@ -354,7 +356,7 @@ jobs:
             --filters "Name=tag:Name,Values=backend-deployment-${CIRCLE_WORKFLOW_ID:0:7}" \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text)
-            curl "http://${BACKEND_URL}:3030/api/status"
+            curl "http://${BACKEND_IP}:3030/api/status"
       - destroy-environment
       - revert-migrations
       - slack/status
