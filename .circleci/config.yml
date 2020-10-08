@@ -192,7 +192,7 @@ jobs:
       - run:
           name: Save URL
           command: |
-            aws ec2 describe-instances --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            aws ec2 describe-instances --filters "Name=tag:Name,Values=backend-deployment-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query "Reservations[*].Instances[*].[PublicDnsName]" \
               --output text > /tmp/saveme/backend_url.txt
       - persist_to_workspace:
