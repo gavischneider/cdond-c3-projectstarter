@@ -171,13 +171,13 @@ jobs:
             cd .circleci/files
             aws cloudformation deploy \
               --template-file backend.yml \
-              --stack-name "backend-deployment-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="backend-deployment-${CIRCLE_WORKFLOW_ID:0:7}"
+              --stack-name "backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="backend-${CIRCLE_WORKFLOW_ID:0:7}"
       - run:
           name: Get and save public DNS of EC2 instance to https://memstash.io/
           command: |
             PUBLIC_DNS=$(aws ec2 describe-instances --region ${AWS_DEFAULT_REGION} \
-            --filters "Name=tag:Name,Values=backend-deployment-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --query "Reservations[*].Instances[0].PublicDnsName" \
             --output text) > /tmp/saveme/public_dns.txt
       - persist_to_workspace:
@@ -187,12 +187,12 @@ jobs:
       - run:
           name: Backend failure describe
           command: |
-            aws cloudformation describe-stack-events --stack-name "backend-deployment-${CIRCLE_WORKFLOW_ID:0:7}"
+            aws cloudformation describe-stack-events --stack-name "backend-${CIRCLE_WORKFLOW_ID:0:7}"
           when: on_fail
       - run:
           name: Save URL
           command: |
-            aws ec2 describe-instances --filters "Name=tag:Name,Values=backend-deployment-${CIRCLE_WORKFLOW_ID:0:7}" \
+            aws ec2 describe-instances --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query "Reservations[*].Instances[*].[PublicDnsName]" \
               --output text > /tmp/saveme/backend_url.txt
       - persist_to_workspace:
@@ -356,7 +356,7 @@ jobs:
           name: Smoke test on backend
           command: |
             BACKEND_URL=$(aws ec2 describe-instances \
-              --filters "Name=tag:Name,Values=backend-deployment-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query "Reservations[*].Instances[*].[PublicDnsName]" \
               --output text)
 
