@@ -332,7 +332,7 @@ jobs:
     steps:
       # - attach_workspace:
       #     at: /tmp/saveme
-      # - checkout
+      - checkout
       # - run:
       #     name: Install system dependencies
       #     command: |
