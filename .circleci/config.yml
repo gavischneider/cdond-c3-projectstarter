@@ -395,7 +395,7 @@ jobs:
             printf '%s\n' "${STACKS[@]}"
 
             aws cloudformation deploy \
-              --template-file .circleci/files/cloudfront_infrastructure.yml \
+              --template-file .circleci/files/cloudfront.yml \
               --parameter-overrides ID="prod-${CIRCLE_WORKFLOW_ID:0:7}" \
               --stack-name udapeople-prod-cloudfront
 
