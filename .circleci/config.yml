@@ -448,6 +448,6 @@ workflows:
       - smoke-tests:
           requires:
             - deploy-frontend
-      - deploy-cloudfront-infrastructure:
-          requires:
-            - smoke-tests
+#      - deploy-cloudfront-infrastructure:
+#          requires:
+#            - smoke-tests
