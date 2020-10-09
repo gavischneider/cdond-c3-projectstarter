@@ -172,7 +172,14 @@ jobs:
             aws cloudformation deploy \
               --template-file backend.yml \
               --stack-name "backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="backend-${CIRCLE_WORKFLOW_ID:0:7}"
+              --parameter-overrides ID="backend-deployment-${CIRCLE_WORKFLOW_ID:0:7}"
+
+            export BACKEND_URL=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --query "Reservations[*].Instances[*].[PublicDnsName]" \
+              --output text)
+            echo API_URL="http://${BACKEND_URL}:3030" > "frontend/.env"
+            echo BACKEND_URL: ${BACKEND_URL}
       - run:
           name: Get and save public DNS of EC2 instance to https://memstash.io/
           command: |
@@ -289,6 +296,8 @@ jobs:
               --query "Reservations[*].Instances[*].[PublicDnsName]" \
               --output text)
             echo API_URL="http://${BACKEND_URL}:3030" > "frontend/.env"
+            echo BACKEND_URL: ${BACKEND_URL}
+            export API_URL="http://${BACKEND_URL}:3030"
             sudo npm install webpack-dev-server -g
             cd frontend            
             npm i
