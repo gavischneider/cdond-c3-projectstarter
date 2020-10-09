@@ -352,24 +352,24 @@ jobs:
             else
               exit 1
             fi
-      - run:
-          name: Smoke test on backend
-          command: |
-            export BACKEND_URL=$(aws ec2 describe-instances \
-              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --query "Reservations[*].Instances[*].[PublicDnsName]" \
-              --output text)
+      # - run:
+      #     name: Smoke test on backend
+      #     command: |
+      #       export BACKEND_URL=$(aws ec2 describe-instances \
+      #         --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+      #         --query "Reservations[*].Instances[*].[PublicDnsName]" \
+      #         --output text)
 
-            if curl http://${BACKEND_URL}:3030/api/status | grep '"status": "ok"'
-            then
-             exit 0
-            else
-              echo 'Backend smoke test failed due to an invalid check'
-              exit 1
-            fi 
+      #       if curl http://${BACKEND_URL}:3030/api/status | grep '"status": "ok"'
+      #       then
+      #        exit 0
+      #       else
+      #         echo 'Backend smoke test failed due to an invalid check'
+      #         exit 1
+      #       fi
 
-            echo $BACKEND_URL
-            echo "http://${BACKEND_URL}:3030/api/status"
+      #       echo $BACKEND_URL
+      #       echo "http://${BACKEND_URL}:3030/api/status"
 
       - destroy-environment
       - revert-migrations
