@@ -357,7 +357,7 @@ jobs:
           command: |
             file=/tmp/saveme/backend_url.txt
             echo $file
-            echo "http://$(cat file):3030/api/status"
+            echo "http://$(cat $file):3030/api/status"
 
             aws ec2 describe-instances \
               --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
