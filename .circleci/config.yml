@@ -160,7 +160,7 @@ jobs:
           command: |
             cd .circleci/ansible
             ansible-playbook -i inventory.txt main.yml
-      - destroy-environment
+  #      - destroy-environment
 
   run-migrations:
     docker:
