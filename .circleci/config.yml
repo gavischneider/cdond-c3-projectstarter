@@ -255,7 +255,7 @@ jobs:
       - run:
           name: Smoke test backend
           command: |
-            BACKEND_IP=$(aws ec2 --region us-east-1 describe-instances \
+            BACKEND_IP=$(aws ec2 describe-instances \
             --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID}" \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text)
@@ -271,8 +271,8 @@ jobs:
             else
               return 1
             fi
-      - destroy-environment
-      - revert-migration
+  #     - destroy-environment
+#    - revert-migration
 
 workflows:
   default:
