@@ -164,22 +164,20 @@ jobs:
 
   run-migrations:
     docker:
-      - image: circleci/node:13.8.0
+      - image: circleci/node
     steps:
       - checkout
+      - npm-install:
+          end: "backend"
       - run:
-          name: Run migrations
+          name: Run DB Migration
           command: |
-            cd backend
-            npm install
-            MIGRATED=$(npm run migrations)
+            cd backend && npm install
+            npm run migrations
       - run:
-          name: Send migration results to memstash
+          name: Log to memstash
           command: |
-            if grep -q "has been executed successfully." "$MIGRATED"
-            then
-              curl -H "Content-Type: text/plain" -H "token: 46379a95-9d53-46f2-becb-d0e5c670441f" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
-            fi
+            curl -H "Content-Type: text/plain" -H "token: 46379a95-9d53-46f2-becb-d0e5c670441f" --request PUT --data "true" https://api.memstash.io/values/${CIRCLE_WORKFLOW_ID:0:7}
       - destroy-environment
 
 workflows:
