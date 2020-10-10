@@ -252,15 +252,15 @@ jobs:
           command: |
             apk add --update curl
             pip install awscli
-      - run:
-          name: Smoke test backend
-          command: |
-            BACKEND_IP=$(aws ec2 describe-instances \
-            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID}" \
-            --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --output text)
-            echo "${BACKEND_IP}"
-            curl "http://${BACKEND_IP}:22/api/status"
+      # - run:
+      #     name: Smoke test backend
+      #     command: |
+      #       BACKEND_IP=$(aws ec2 describe-instances \
+      #       --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID}" \
+      #       --query 'Reservations[*].Instances[*].PublicIpAddress' \
+      #       --output text)
+      #       echo "${BACKEND_IP}"
+      #       curl "http://${BACKEND_IP}:3030/api/status"
       - run:
           name: Smoke test frontend
           command: |
@@ -271,8 +271,51 @@ jobs:
             else
               return 1
             fi
-  #     - destroy-environment
-#    - revert-migration
+      - destroy-environment
+      - revert-migration
+
+  cloudfront-update:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["c8:0e:47:83:0f:1c:f1:a8:4a:98:c9:4c:61:a3:4e:3a"]
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update nodejs npm curl
+            pip install awscli
+      - run:
+          name: Update cloudfront distribution
+          command: |
+            export OldWorkflowID=$(aws cloudformation \
+              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+              --no-paginate --output text)
+
+            export STACKS=$(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
+              --stack-status-filter CREATE_COMPLETE --no-paginate --output text)
+
+            echo Old Workflow Id: "$OldWorkflowID"
+            echo "$STACKS[*]"
+
+            aws cloudformation deploy \
+              --template-file .circleci/files/cloudfront.yml \
+              --stack-name udapeople-cloudfront \
+              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID}" \
+              --tags project=udapeople
+      - run:
+          name: Clean up old resources
+          command: |
+            if echo "$STACKS[*]" | grep -Eq "$OldWorkflowID" 
+            then
+              echo "${OldWorkflowID}"
+              aws s3 rm "s3://${OldWorkflowID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+            fi
+      - destroy-environment
+      - revert-migration
 
 workflows:
   default:
@@ -303,3 +346,5 @@ workflows:
           requires: [run-migrations]
       - smoke-test:
           requires: [deploy-backend, deploy-frontend]
+      - cloudfront-update:
+          requires: [smoke-test]
