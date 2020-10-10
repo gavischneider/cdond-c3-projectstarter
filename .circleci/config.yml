@@ -197,7 +197,7 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text)
             export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
+            echo "${API_URL}" > frontend/.env
       - run:
           name: Deploy frontend objects
           command: |
@@ -252,15 +252,15 @@ jobs:
           command: |
             apk add --update curl
             pip install awscli
-      # - run:
-      #     name: Smoke test backend
-      #     command: |
-      #       BACKEND_IP=$(aws ec2 describe-instances \
-      #       --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID}" \
-      #       --query 'Reservations[*].Instances[*].PublicIpAddress' \
-      #       --output text)
-      #       echo "${BACKEND_IP}"
-      #       curl "http://${BACKEND_IP}:3030/api/status"
+      - run:
+          name: Smoke test backend
+          command: |
+            BACKEND_IP=$(aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID}" \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --output text)
+            echo "${BACKEND_IP}"
+            curl "http://${BACKEND_IP}:3030/api/status"
       - run:
           name: Smoke test frontend
           command: |
@@ -310,7 +310,11 @@ jobs:
             if echo "$STACKS[*]" | grep -Eq "$OldWorkflowID" 
             then
               echo "${OldWorkflowID}"
+
+              echo "This is the bucket: "
+              echo "s3://${OldWorkflowID}"
               aws s3 rm "s3://${OldWorkflowID}" --recursive
+
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
             fi
