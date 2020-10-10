@@ -8,7 +8,8 @@
     - ansible_host_key_checking: false
     - ansible_stdout_callback: yaml
     - ansible_port: "22"
-    - TYPEORM_MIGRATIONS: "production"
+    - TYPEORM_MIGRATIONS: "./src/migrations/*.ts"
+    - TYPEORM_MIGRATIONS_DIR: "./src/migrations"
     - TYPEORM_CONNECTION: "postgres"
     - TYPEORM_ENTITIES: "./src/modules/domain/**/*.entity.ts"
     - TYPEORM_HOST: "{{ lookup('env','TYPEORM_HOST') }}"
