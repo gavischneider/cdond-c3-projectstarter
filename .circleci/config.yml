@@ -167,8 +167,6 @@ jobs:
       - image: circleci/node
     steps:
       - checkout
-      - npm-install:
-          end: "backend"
       - run:
           name: Run DB Migration
           command: |
