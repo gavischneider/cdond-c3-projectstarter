@@ -255,7 +255,7 @@ jobs:
       - run:
           name: Smoke test backend
           command: |
-            BACKEND_IP=$(aws ec2 describe-instances --region us-east-1 \
+            BACKEND_IP=$(aws ec2 --region us-east-1 describe-instances \
             --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID}" \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text)
