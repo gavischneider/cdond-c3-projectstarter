@@ -31,7 +31,7 @@
 
 ---
 - user: ubuntu
-  hosts: backend
+  hosts: web
   gather_facts: true
 
   vars:
