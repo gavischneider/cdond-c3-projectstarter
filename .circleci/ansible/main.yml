@@ -1,7 +1,7 @@
 ---
 - user: ec2-user
-  hosts: web
-  gather_facts: true
+  hosts: all
+  gather_facts: false
 
   vars:
     #    - ansible_python_interpreter: /usr/bin/python3
