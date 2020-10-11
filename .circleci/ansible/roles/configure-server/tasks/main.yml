@@ -3,7 +3,6 @@
   become: true
   apt:
     upgrade: "yes"
-    state: fixed
 
 - name: "install dependencies."
   become: true
