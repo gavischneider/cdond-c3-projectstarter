@@ -31,7 +31,7 @@
 
     - name: "install python"
       become: true
-      raw: "sudo apt-get -y install python"
+      raw: "sudo yum -y install python"
 
     - setup:
 
