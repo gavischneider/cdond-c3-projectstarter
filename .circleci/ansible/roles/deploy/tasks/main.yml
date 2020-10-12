@@ -23,12 +23,19 @@
     cd dist
     tar -xzf backend_artifact.tar.gz .
     rm backend_artifact.tar.gz
+
 - name: Delete old pm2 process
   become: true
-  command: pm2 delete app
+  #  command: pm2 delete app
   ignore_errors: yes
+  shell: |
+    pm2 stop app
+    pm2 delete app
 
 - name: Executing node
   become: true
   shell: |
-    pm2 start -x -i 4 --name "app" ./dist/main.js
+    pm2 start npm --name app ./dist/main.js
+
+#    pm2 start -x -i 4 --name "app" ./dist/main.js
+
