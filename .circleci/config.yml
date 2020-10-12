@@ -211,7 +211,7 @@ jobs:
       - run:
           name: Deploy frontend objects
           command: |
-            sudo npm install webpack-dev-server -g
+            npm install webpack-dev-server -g
             cd frontend
             npm install
             npm run build
