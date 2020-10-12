@@ -246,6 +246,9 @@ jobs:
             cd backend
             npm i
             npm run build
+            echo "List of contents"
+            ls
+            echo "---------------------------------"
             tar -C dist -czvf backend_artifact.tar.gz .
             mkdir -p ../.circleci/ansible/roles/deploy/files
             mv backend_artifact.tar.gz ../.circleci/ansible/roles/deploy/files/
