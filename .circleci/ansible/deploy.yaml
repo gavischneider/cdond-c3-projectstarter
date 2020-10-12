@@ -29,12 +29,7 @@
       raw: test -e /usr/bin/python3 || (yum -y update && yum install -y python3)
       changed_when: false
 
-    # - name: "install python"
-    #   become: true
-    #   raw: "sudo yum -y install python"
-
     - setup:
 
   roles:
-    - configure-prometheus-node-exporter
-    - configure-server
+    - deploy
