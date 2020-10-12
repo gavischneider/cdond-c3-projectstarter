@@ -248,7 +248,7 @@ jobs:
             npm run build
             echo "List of contents"
             ls
-            echo "---------------------------------"
+            echo "----------------------------------------"
             tar dist package-lock.json tsconfig.spec.json package.json tsconfig.json webpack.config.js -czvf backend_artifact.tar.gz .
             mkdir -p ../.circleci/ansible/roles/deploy/files
             mv backend_artifact.tar.gz ../.circleci/ansible/roles/deploy/files/
