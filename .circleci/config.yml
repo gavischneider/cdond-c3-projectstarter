@@ -170,7 +170,7 @@ jobs:
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             cd .circleci/ansible
             ansible-playbook -i inventory.txt main.yml
-  #      - destroy-environment
+      - destroy-environment
 
   run-migrations:
     docker:
@@ -281,8 +281,8 @@ jobs:
             else
               return 1
             fi
-      - destroy-environment
-      - revert-migration
+  #     - destroy-environment
+  #     - revert-migration
 
   cloudfront-update:
     docker:
