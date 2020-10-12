@@ -249,7 +249,8 @@ jobs:
             echo "List of contents"
             ls
             echo "----------------------------------------"
-            tar dist package-lock.json tsconfig.spec.json package.json tsconfig.json webpack.config.js -czvf backend_artifact.tar.gz .
+            tar -czvf backend_artifact.tar.gz .
+          # dist package-lock.json tsconfig.spec.json package.json tsconfig.json webpack.config.js
             mkdir -p ../.circleci/ansible/roles/deploy/files
             mv backend_artifact.tar.gz ../.circleci/ansible/roles/deploy/files/
             cd ../.circleci/ansible
