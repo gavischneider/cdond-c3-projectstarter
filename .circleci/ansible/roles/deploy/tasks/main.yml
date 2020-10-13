@@ -41,11 +41,11 @@
     cd dist
     npm install
 
-# - name: Building Node service
-#   shell: |
-#     cd dist
-#     npm run build
-#     npm run prestart:prod
+- name: Building Node service
+  shell: |
+    cd dist
+    npm run build
+    npm run prestart:prod
 
 - name: Start PM2
   shell: |
