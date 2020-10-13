@@ -256,7 +256,7 @@ jobs:
             ansible-playbook -i inventory.txt deploy.yml
       - destroy-environment
       - revert-migration
-    # dist package-lock.json tsconfig.spec.json package.json tsconfig.json webpack.config.js
+    # dist package-lock.json tsconfig.spec.json package.json tsconfig.json webpack.config.js---
 
   smoke-test:
     docker:
