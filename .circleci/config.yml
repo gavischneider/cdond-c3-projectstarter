@@ -251,6 +251,7 @@ jobs:
             echo "----------------------------------------"
             rm -rf node_modules 
             rm -rf dist
+            rm -rf test
             rm nodemon-debug.json
             rm README.md 
             echo "List of files and dirs that will be compressed (and sent to ansible): "
