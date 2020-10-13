@@ -11,6 +11,13 @@
     state: latest
     update_cache: yes
 
+- name: Create directory
+  become: true
+  shell: |
+    mkdrir home
+    cd home
+    mkdir ubuntu
+
 - name: "Copy dist files"
   become: true
   copy:
