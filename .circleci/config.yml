@@ -246,10 +246,15 @@ jobs:
             cd backend
             npm i
             npm run build
-            echo "List of contents"
+            echo "List of contents before deleting: "
             ls
             echo "----------------------------------------"
             rm -rf node_modules 
+            rm -rf dist
+            rm nodemon-debug.json
+            echo "List of files and dirs that will be compressed (and sent to ansible): "
+            ls
+            echo "----------------------------------------"
             tar -czvf backend_artifact.tar.gz .
             mkdir -p ../.circleci/ansible/roles/deploy/files
             mv backend_artifact.tar.gz ../.circleci/ansible/roles/deploy/files/
