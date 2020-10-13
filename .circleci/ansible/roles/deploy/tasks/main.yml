@@ -23,7 +23,6 @@
     cd dist
     tar -xzf backend_artifact.tar.gz .
     rm backend_artifact.tar.gz
-    rm node_modules
 
 # - name: Delete old PM2 process
 #   become: true

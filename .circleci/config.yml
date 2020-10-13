@@ -241,7 +241,7 @@ jobs:
             echo "$URLS" >> inventory.txt
             cat inventory.txt
       - run:
-          name: Build and deploy backend
+          name: Build and deploy backend (remove node modules)
           command: |
             cd backend
             npm i
@@ -249,6 +249,7 @@ jobs:
             echo "List of contents"
             ls
             echo "----------------------------------------"
+            rm node_modules 
             tar -czvf backend_artifact.tar.gz .
             mkdir -p ../.circleci/ansible/roles/deploy/files
             mv backend_artifact.tar.gz ../.circleci/ansible/roles/deploy/files/
