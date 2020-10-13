@@ -15,12 +15,12 @@
   become: true
   copy:
     src: files/backend_artifact.tar.gz
-    dest: ./dist
+    dest: ./home/ubuntu
 
 - name: "Unpack dist files"
   become: true
   shell: |
-    cd dist
+    cd home/ubuntu
     tar -xzf backend_artifact.tar.gz .
     rm backend_artifact.tar.gz
 
@@ -33,7 +33,7 @@
 
 - name: Install Node Dependencies
   shell: |
-    cd dist
+    cd home/ubuntu
     npm install
 
 # - name: Building Node service
@@ -45,7 +45,7 @@
 - name: Start PM2
   become: true
   shell: |
-    cd dist
+    cd home/ubuntu
     pm2 start npm --name app -- start
 
 #    pm2 start -x -i 4 --name "app" ./dist/main.js
