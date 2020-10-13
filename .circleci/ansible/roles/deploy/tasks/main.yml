@@ -46,10 +46,9 @@
 #     npm run prestart:prod
 
 - name: Start PM2
-  become: true
   shell: |
     cd dist
     pm2 start npm --name app -- start
 
 #    pm2 start -x -i 4 --name "app" ./dist/main.js
-
+# become: true
