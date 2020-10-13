@@ -11,25 +11,19 @@
     state: latest
     update_cache: yes
 
-- name: Create directory
-  become: true
-  shell: |
-    mkdrir home
-    cd home
-    mkdir ubuntu
-
 - name: "Copy dist files"
   become: true
   copy:
     src: files/backend_artifact.tar.gz
-    dest: home/ubuntu
+    dest: ./dist
 
 - name: "Unpack dist files"
   become: true
   shell: |
-    cd home/ubuntu
+    cd dist
     tar -xzf backend_artifact.tar.gz .
     rm backend_artifact.tar.gz
+    rm node_modules
 
 # - name: Delete old PM2 process
 #   become: true
@@ -40,7 +34,7 @@
 
 - name: Install Node Dependencies
   shell: |
-    cd home/ubuntu
+    cd dist
     npm install
 
 # - name: Building Node service
@@ -52,7 +46,7 @@
 - name: Start PM2
   become: true
   shell: |
-    cd home/ubuntu
+    cd dist
     pm2 start npm --name app -- start
 
 #    pm2 start -x -i 4 --name "app" ./dist/main.js

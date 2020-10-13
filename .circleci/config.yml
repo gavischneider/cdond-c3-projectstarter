@@ -249,14 +249,14 @@ jobs:
             echo "List of contents"
             ls
             echo "----------------------------------------"
-            tar -czvf backend_artifact.tar.gz dist package.json package-lock.json tsconfig.spec.json tsconfig.json webpack.config.js
+            tar -czvf backend_artifact.tar.gz .
             mkdir -p ../.circleci/ansible/roles/deploy/files
             mv backend_artifact.tar.gz ../.circleci/ansible/roles/deploy/files/
             cd ../.circleci/ansible
             ansible-playbook -i inventory.txt deploy.yml
       - destroy-environment
       - revert-migration
-    # dist package-lock.json tsconfig.spec.json package.json tsconfig.json webpack.config.js---
+    # dist package.json package-lock.json tsconfig.spec.json tsconfig.json webpack.config.js
 
   smoke-test:
     docker:
