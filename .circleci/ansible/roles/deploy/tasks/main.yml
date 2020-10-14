@@ -42,7 +42,6 @@
     echo "------------------------------"
     npm install
     pm2 start npm --name app -- start
-#---
 
 # - name: Delete old PM2 process
 #   become: true
