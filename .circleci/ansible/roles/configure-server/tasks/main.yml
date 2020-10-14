@@ -22,5 +22,5 @@
 
 - name: Creates directory
   file:
-    path: ./dist
+    path: ./backend-app
     state: directory

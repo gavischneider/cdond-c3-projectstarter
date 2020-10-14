@@ -11,16 +11,22 @@
     state: latest
     update_cache: yes
 
+- name: "copy .env folder"
+  become: true
+  copy:
+    src: /root/project/backend
+    dest: ./backend-app
+
 - name: "Copy dist files"
   become: true
   copy:
     src: files/backend_artifact.tar.gz
-    dest: ./dist
+    dest: ./backend-app
 
 - name: "Unpack dist files"
   become: true
   shell: |
-    cd dist
+    cd backend-app
     tar -xzf backend_artifact.tar.gz .
     rm backend_artifact.tar.gz
     echo "List of contents: "
@@ -38,18 +44,18 @@
 
 - name: Install Node Dependencies
   shell: |
-    cd dist
+    cd backend-app
     npm install
 
 - name: Building Node service
   shell: |
-    cd dist
+    cd backend-app
     npm run build
     npm run prestart:prod
 
 - name: Start PM2
   shell: |
-    cd dist
+    cd backend-app
     pm2 start npm --name app -- start
 
 #    pm2 start -x -i 4 --name "app" ./dist/main.js
