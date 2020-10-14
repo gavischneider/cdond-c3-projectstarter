@@ -17,15 +17,14 @@
     src: /root/project/backend
     dest: ./backend-app
 
-# - name: "Rename to .env (remove file extension)"
-#   become: true
-#   shell: |
-#     cd backend-app
-#     attrib -h .env.sample
-#     ren .env.sample .env
-#     attrib +h .env
-
-#----
+- name: "Rename to .env (remove file extension)"
+  become: true
+  shell: |
+    cd backend-app
+    cd backend
+    attrib -h .env.sample
+    ren .env.sample .env
+    attrib +h .env
 
 - name: "Copy dist files"
   become: true
