@@ -173,7 +173,6 @@ jobs:
             cd .circleci/ansible
             ansible-playbook -i inventory.txt main.yml
       - destroy-environment
-  # ---
 
   run-migrations:
     docker:
@@ -259,7 +258,7 @@ jobs:
             echo "List of files and dirs that will be compressed (and sent to ansible): "
             ls
             echo "----------------------------------------"
-            tar -czvf backend_artifact.tar.gz .
+          #  tar -czvf backend_artifact.tar.gz .
             mkdir -p ../.circleci/ansible/roles/deploy/files
             mv backend_artifact.tar.gz ../.circleci/ansible/roles/deploy/files/
             cd ../.circleci/ansible
