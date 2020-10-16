@@ -17,15 +17,6 @@
     src: /root/project/backend
     dest: ./backend-app
 
-# - name: "Rename to .env (remove file extension)"
-#   become: true
-#   shell: |
-#     shell: |
-#     cd backend-app
-#     cd backend
-#     ls
-#     mv ./.env.sample ./.env
-
 # - name: Delete old PM2 process
 #   become: true
 #   ignore_errors: yes
@@ -38,11 +29,11 @@
     cd backend-app
     npm install
 
-- name: Building Node service
-  shell: |
-    cd backend-app
-    npm run build
-    npm run prestart:prod
+# - name: Building Node service
+#   shell: |
+#     cd backend-app
+#     npm run build
+#     npm run prestart:prod
 
 - name: Start PM2
   shell: |
