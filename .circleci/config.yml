@@ -259,13 +259,13 @@ jobs:
             ls
             echo "----------------------------------------"
             mkdir -p ../.circleci/ansible/roles/deploy/files
-            mv backend_artifact.tar.gz ../.circleci/ansible/roles/deploy/files/
             cd ../.circleci/ansible
             ansible-playbook -i inventory.txt deploy.yml
       - destroy-environment
       - revert-migration
     # dist package.json package-lock.json tsconfig.spec.json tsconfig.json webpack.config.js
     #  tar -czvf backend_artifact.tar.gz . (line 261, after echo)
+    # mv backend_artifact.tar.gz ../.circleci/ansible/roles/deploy/files/ (line 262)
 
   smoke-test:
     docker:
