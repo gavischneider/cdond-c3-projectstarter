@@ -11,7 +11,7 @@
     state: latest
     update_cache: yes
 
-- name: "copy .env folder"
+- name: "copy backend folder"
   become: true
   copy:
     src: /root/project/backend
@@ -25,24 +25,6 @@
     cd backend
     ls
     mv ./.env.sample ./.env
-
-# - name: "Copy dist files"
-#   become: true
-#   copy:
-#     src: files/backend_artifact.tar.gz
-#     dest: ./backend-app
-
-# - name: "Unpack dist files"
-#   become: true
-#   shell: |
-#     cd backend-app
-#     tar -xzf backend_artifact.tar.gz .
-#     rm backend_artifact.tar.gz
-#     echo "List of contents: "
-#     ls
-#     echo "------------------------------"
-#     npm install
-#     pm2 start npm --name app -- start
 
 # - name: Delete old PM2 process
 #   become: true

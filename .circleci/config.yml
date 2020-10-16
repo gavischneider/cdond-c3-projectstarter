@@ -249,14 +249,14 @@ jobs:
             npm i
             npm run build
             echo "List of contents before deleting: "
-            ls
+            ls -a
             echo "----------------------------------------"
             rm -rf node_modules 
             rm -rf dist
             rm -rf test
             rm README.md 
-            echo "List of files and dirs that will be compressed (and sent to ansible): "
-            ls
+            echo "List of files and dirs that will be sent to ansible: "
+            ls -a
             echo "----------------------------------------"
             mkdir -p ../.circleci/ansible/roles/deploy/files
             cd ../.circleci/ansible
@@ -264,8 +264,6 @@ jobs:
     #  - destroy-environment
     #  - revert-migration
     # dist package.json package-lock.json tsconfig.spec.json tsconfig.json webpack.config.js
-    #  tar -czvf backend_artifact.tar.gz . (line 261, after echo)
-    # mv backend_artifact.tar.gz ../.circleci/ansible/roles/deploy/files/ (line 262)
 
   smoke-test:
     docker:
