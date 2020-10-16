@@ -24,7 +24,7 @@
     cd backend-app
     cd backend
     ls
-    mv .env.sample .env
+    mv ./.env.sample ./.env
 
 # - name: "Copy dist files"
 #   become: true
