@@ -29,15 +29,17 @@
     cd backend-app
     npm install
 
-# - name: Building Node service
-#   shell: |
-#     cd backend-app
-#     npm run build
-#     npm run prestart:prod
+- name: Building Node service
+  shell: |
+    cd backend-app
+    cd backend
+    npm run build
+    npm run prestart:prod
 
 - name: Start PM2
   shell: |
     cd backend-app
+    cd backend
     pm2 start npm --name app -- start
 
 #    pm2 start -x -i 4 --name "app" ./dist/main.js
