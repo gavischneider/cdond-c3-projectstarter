@@ -17,14 +17,14 @@
     src: /root/project/backend
     dest: ./backend-app
 
-- name: "Rename to .env (remove file extension)"
-  become: true
-  shell: |
-    shell: |
-    cd backend-app
-    cd backend
-    ls
-    mv ./.env.sample ./.env
+# - name: "Rename to .env (remove file extension)"
+#   become: true
+#   shell: |
+#     shell: |
+#     cd backend-app
+#     cd backend
+#     ls
+#     mv ./.env.sample ./.env
 
 # - name: Delete old PM2 process
 #   become: true
