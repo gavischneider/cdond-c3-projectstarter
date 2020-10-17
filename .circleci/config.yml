@@ -134,12 +134,12 @@ jobs:
               echo "ARN=$ARN"
               curl -H "Content-Type: text/plain" -H "token: 46379a95-9d53-46f2-becb-d0e5c670441f" --request PUT --data "$ARN" https://api.memstash.io/values/arn_${CIRCLE_WORKFLOW_ID}
       - run:
-          name: Ensure that the frontend infrastructure exists
+          name: Ensure that the cloudfront infrastructure exists
           command: |
             aws cloudformation deploy \
                 --template-file .circleci/files/cloudfront.yml \
-                --stack-name "udapeople-cloudfront-${CIRCLE_WORKFLOW_ID:0:7}" \
-                --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
+                --stack-name "udapeople-cloudfront-${CIRCLE_WORKFLOW_ID}" \
+                --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID}"
       - destroy-environment
 
   configure-infrastructure:
@@ -287,8 +287,8 @@ jobs:
             mkdir -p ../.circleci/ansible/roles/deploy/files
             cd ../.circleci/ansible
             ansible-playbook -i inventory.txt deploy.yml
-    #  - destroy-environment
-    #  - revert-migration
+      - destroy-environment
+      - revert-migration
     # dist package.json package-lock.json tsconfig.spec.json tsconfig.json webpack.config.js
 
   smoke-test:
