@@ -27,6 +27,7 @@
 - name: Install Node Dependencies
   shell: |
     cd backend-app
+    cd backend
     npm install
 
 # - name: Building Node service
