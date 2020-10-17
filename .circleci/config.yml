@@ -335,7 +335,7 @@ jobs:
             apk add --update nodejs npm curl
             pip install awscli
       - run:
-          name: Promoto CloudFront distribution
+          name: Promote CloudFront distribution and clean up old resources
           command: |
             export OldWorkflowID=$(aws cloudformation \
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
@@ -347,15 +347,12 @@ jobs:
             echo Old Workflow Id: "$OldWorkflowID"
             echo "$STACKS[*]"
 
-      - run:
-          name: Clean up old resources
-          command: |
             if echo "$STACKS[*]" | grep -Eq "$OldWorkflowID" 
             then
               echo "${OldWorkflowID}"
 
               echo "This is the bucket: "
-              echo "s3://${OldWorkflowID}"
+              echo "s3://udapeople-${OldWorkflowID}"
               aws s3 rm "s3://${OldWorkflowID}" --recursive
 
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
