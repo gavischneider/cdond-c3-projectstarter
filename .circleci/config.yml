@@ -335,7 +335,7 @@ jobs:
             apk add --update nodejs npm curl
             pip install awscli
       - run:
-          name: Update cloudfront distribution
+          name: Promoto CloudFront distribution
           command: |
             export OldWorkflowID=$(aws cloudformation \
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
@@ -347,11 +347,6 @@ jobs:
             echo Old Workflow Id: "$OldWorkflowID"
             echo "$STACKS[*]"
 
-            aws cloudformation deploy \
-              --template-file .circleci/files/cloudfront.yml \
-              --stack-name udapeople-cloudfront \
-              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID}" \
-              --tags project=udapeople
       - run:
           name: Clean up old resources
           command: |
