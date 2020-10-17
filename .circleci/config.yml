@@ -159,6 +159,7 @@ jobs:
             cat inventory.txt
       - run:
           name: Configure server with ansible
+          no_output_timeout: 30m
           command: |
             echo ENVIROMENT=production > "backend/.env"
             echo TYPEORM_CONNECTION=postgres >> "backend/.env"
@@ -272,8 +273,8 @@ jobs:
             mkdir -p ../.circleci/ansible/roles/deploy/files
             cd ../.circleci/ansible
             ansible-playbook -i inventory.txt deploy.yml
-    #  - destroy-environment
-    #  - revert-migration
+      - destroy-environment
+      - revert-migration
     # dist package.json package-lock.json tsconfig.spec.json tsconfig.json webpack.config.js
 
     #---
