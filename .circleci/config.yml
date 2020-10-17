@@ -133,6 +133,13 @@ jobs:
               ARN=$(aws s3 ls | grep udapeople)
               echo "ARN=$ARN"
               curl -H "Content-Type: text/plain" -H "token: 46379a95-9d53-46f2-becb-d0e5c670441f" --request PUT --data "$ARN" https://api.memstash.io/values/arn_${CIRCLE_WORKFLOW_ID}
+      - run:
+          name: Ensure that the frontend infrastructure exists
+          command: |
+            aws cloudformation deploy \
+                --template-file .circleci/files/cloudfront.yml \
+                --stack-name "udapeople-cloudfront-${CIRCLE_WORKFLOW_ID:0:7}" \
+                --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
       - destroy-environment
 
   configure-infrastructure:
@@ -281,8 +288,6 @@ jobs:
     #  - destroy-environment
     #  - revert-migration
     # dist package.json package-lock.json tsconfig.spec.json tsconfig.json webpack.config.js
-
-    #---
 
   smoke-test:
     docker:
