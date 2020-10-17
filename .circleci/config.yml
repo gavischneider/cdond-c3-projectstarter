@@ -245,6 +245,7 @@ jobs:
             cat inventory.txt
       - run:
           name: Build and deploy backend (remove node modules)
+          no_output_timeout: 30m
           command: |
             cd backend
             touch .env
@@ -258,23 +259,27 @@ jobs:
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ".env"
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ".env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ".env"
+
             npm i
             npm run build
             echo "List of contents before deleting: "
             ls -a
             echo "----------------------------------------"
+
             rm -rf node_modules 
             rm -rf dist
             rm -rf test
             rm README.md 
+
             echo "List of files and dirs that will be sent to ansible: "
             ls -a
             echo "----------------------------------------"
+
             mkdir -p ../.circleci/ansible/roles/deploy/files
             cd ../.circleci/ansible
             ansible-playbook -i inventory.txt deploy.yml
-      - destroy-environment
-      - revert-migration
+       destroy-environment
+       revert-migration
     # dist package.json package-lock.json tsconfig.spec.json tsconfig.json webpack.config.js
 
     #---

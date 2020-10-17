@@ -15,7 +15,7 @@
   become: true
   copy:
     src: /root/project/backend
-    dest: ./backend-app
+    dest: /home/ubuntu
 
 # - name: Delete old PM2 process
 #   become: true
@@ -26,22 +26,16 @@
 
 - name: Install Node Dependencies
   shell: |
-    cd backend-app
-    cd backend
+    cd /home/ubuntu/backend
     npm install
 
-# - name: Building Node service
-#   shell: |
-#     cd backend-app
-#     cd backend
-#     npm run build
-#     npm run prestart:prod
+- name: Building Node service
+  shell: |
+    cd /home/ubuntu/backend
+    npm run build
+    npm run prestart:prod
 
 - name: Start PM2
   shell: |
-    cd backend-app
-    cd backend
+    cd /home/ubuntu/backend
     pm2 start npm --name app -- start
-
-#    pm2 start -x -i 4 --name "app" ./dist/main.js
-# become: true
