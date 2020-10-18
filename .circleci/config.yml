@@ -357,7 +357,7 @@ jobs:
               echo "This is the bucket url: "
               echo "s3://udapeople-${OldWorkflowID}"
 
-              aws s3 rm s3://${OldWorkflowID} --recursive
+              aws s3 rm s3://udapeople-${OldWorkflowID} --recursive
 
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
