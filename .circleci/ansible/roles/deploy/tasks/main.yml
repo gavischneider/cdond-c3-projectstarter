@@ -21,21 +21,20 @@
 #   become: true
 #   ignore_errors: yes
 #   shell: |
-#     pm2 stop app
-#     pm2 delete app
+#     pm2 stop backend
+#     pm2 delete backend
 
 - name: Install Node Dependencies
   shell: |
     cd /home/ubuntu/backend
     npm install
 
-- name: Building Node service
-  shell: |
-    cd /home/ubuntu/backend
-    npm run build
-    npm run prestart:prod
-
-- name: Start PM2
-  shell: |
-    cd /home/ubuntu/backend
-    pm2 start npm --name app -- start
+- name: Building backend service
+    shell: |
+      cd /home/ubuntu/backend
+      npm run build
+      
+- name: Running backend service
+    shell: |
+      cd /home/ubuntu/backend    
+      pm2 start npm --no-automation --name "backend" -- run start
