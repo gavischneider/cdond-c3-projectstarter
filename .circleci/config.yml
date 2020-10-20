@@ -194,7 +194,7 @@ jobs:
           command: |
             cd backend
             npm i
-            sudo npm run migrations
+            npm run migrations
       - run:
           name: Log to memstash
           command: |
