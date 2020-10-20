@@ -30,11 +30,11 @@
     npm install
 
 - name: Building backend service
-    shell: |
-      cd /home/ubuntu/backend
-      npm run build
-      
+  shell: |
+    cd /home/ubuntu/backend
+    npm run build
+
 - name: Running backend service
-    shell: |
-      cd /home/ubuntu/backend    
-      pm2 start npm --no-automation --name "backend" -- run start
+  shell: |
+    cd /home/ubuntu/backend    
+    pm2 start npm --no-automation --name "backend" -- run start
