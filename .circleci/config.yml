@@ -60,12 +60,19 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install JUnit coverage reporter
+          command: npm install --save-dev jest-junit
+      - run:
           name: Test Frontend Code
           command: |
             cd frontend
             npm i
             npm install oauth-sign
             npm run test
+            environment:
+              JEST_JUNIT_OUTPUT_DIR: /results
+      - store_test_results:
+          path: /results
 
   test-backend:
     docker:
@@ -73,11 +80,18 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install JUnit coverage reporter
+          command: npm install --save-dev jest-junit
+      - run:
           name: Test Backend Code
           command: |
             cd backend
             npm i
             npm run test
+            environment:
+              JEST_JUNIT_OUTPUT_DIR: /results
+      - store_test_results:
+          path: /results
 
   scan-frontend:
     docker:
