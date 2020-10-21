@@ -59,6 +59,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: Install JUnit coverage reporter
           command: npm install --save-dev jest-junit
@@ -79,6 +81,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: Install JUnit coverage reporter
           command: npm install --save-dev jest-junit
