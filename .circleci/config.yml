@@ -59,41 +59,37 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - attach_workspace:
-          at: .
       - run:
-          name: Install JUnit coverage reporter
-          command: npm install --save-dev jest-junit
-      - store_test_results:
-          path: /results
-      - run:
-          name: Test Frontend Code
+          name: Test frontend
           command: |
             cd frontend
             npm i
             npm install oauth-sign
-            npm run test -- --ci --runInBand --reporters=default --reporters=jest-junit
-            environment:
-              JEST_JUNIT_OUTPUT_DIR: /results
+            npm i jest-junit
+            npm run test -- --reporters=default --reporters=jest-junit
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: /tmp/reports/junit/
+      - store_test_results:
+          path: /tmp/reports/junit/
 
   test-backend:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - attach_workspace:
-          at: .
       - run:
-          name: Install JUnit coverage reporter
-          command: npm install --save-dev jest-junit
-      - run:
-          name: Run tests
-          working_directory: ./backend
-          command: npm test -- --ci --runInBand --reporters=default --reporters=jest-junit
+          name: Test backend
+          command: |
+            cd backend
+            npm i
+            npm install jest-junit
+            npm run test -- --reporters=default --reporters=jest-junit
           environment:
-            JEST_JUNIT_OUTPUT_DIR: /tmp
+            JEST_JUNIT_OUTPUT_DIR: /tmp/reports/junit/
       - store_test_results:
-          path: /tmp
+          path: /tmp/reports/junit/
+      - slack/status:
+          fail_only: true
 
   scan-frontend:
     docker:
