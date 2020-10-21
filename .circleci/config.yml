@@ -88,8 +88,6 @@ jobs:
             JEST_JUNIT_OUTPUT_DIR: /tmp/reports/junit/
       - store_test_results:
           path: /tmp/reports/junit/
-      - slack/status:
-          fail_only: true
 
   scan-frontend:
     docker:
