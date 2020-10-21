@@ -68,7 +68,7 @@ jobs:
             cd frontend
             npm i
             npm install oauth-sign
-            npm run test
+            npm run test -- --ci --runInBand --reporters=default --reporters=jest-junit
             environment:
               JEST_JUNIT_OUTPUT_DIR: /results
       - store_test_results:
@@ -87,7 +87,7 @@ jobs:
           command: |
             cd backend
             npm i
-            npm run test
+            npm run test -- --ci --runInBand --reporters=default --reporters=jest-junit
             environment:
               JEST_JUNIT_OUTPUT_DIR: /results
       - store_test_results:
